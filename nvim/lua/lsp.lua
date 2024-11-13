@@ -13,7 +13,6 @@ require('mason-lspconfig').setup({
     ensure_installed = {
         'pylsp',
         'lua_ls',
-        'rust_analyzer',
         'bashls',
         'clangd',
         'cmake',
@@ -21,7 +20,6 @@ require('mason-lspconfig').setup({
         'dockerls',
         'html',
         'jsonls',
-        'tsserver',
         'ltex',
         'markdown_oxide',
         'yamlls',
@@ -84,12 +82,16 @@ lspconfig.pylsp.setup({
                     enabled = true
                 },
                 autopep8 = {
-                    enabled = true,
+                    enabled = false,
                     maxLineLength = 120
                 },
                 pylint = {
                     enabled = true,
-                    executable = "pylint"
+                    executable = "pylint",
+                    args = {
+                        "--rcfile",
+                        ".pylintrc"
+                    }
                 },
                 pylsp_mypy = {
                     enabled = true

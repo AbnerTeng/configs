@@ -35,6 +35,11 @@ vim.keymap.set(
     }
 )
 
+-- Bufferline settings --
+vim.keymap.set('n', ']b', ':BufferLineCycleNext<CR>')
+vim.keymap.set('n', '[b', ':BufferLineCyclePrev<CR>')
+
+
 -----------------
 -- Visual mode --
 -----------------
@@ -47,5 +52,10 @@ vim.keymap.set('v', '>', '>gv', opts)
 -- Insert mode --
 -----------------
 
-vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
-vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
+vim.keymap.set('i', '<Tab>', function()
+    return vim.fn.pumvisible() == 1 and "<C-n>" or "    "
+end, opts)
+
+vim.keymap.set('i', '<S-Tab>', function()
+    return vim.fn.pumvisible() == 1 and "<C-p>" or "<C-h><C-h><C-h><C-h>"
+end, opts)

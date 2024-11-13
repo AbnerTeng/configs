@@ -158,4 +158,5 @@ require("lazy").setup({
 	"williamboman/mason-lspconfig.nvim",
 	"neovim/nvim-lspconfig",
     "github/copilot.vim",
+    "nyoom-engineering/oxocarbon.nvim"
 })

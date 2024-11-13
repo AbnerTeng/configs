@@ -158,7 +158,10 @@ require("catppuccin").setup({
 })
 
 -- setup must be called before loading
-vim.cmd.colorscheme "catppuccin"
+-- vim.cmd.colorscheme "catppuccin"
+
+vim.opt.background = "dark" -- set this to dark or light
+vim.cmd.colorscheme "oxocarbon"
 
 -- for mininvim
 
@@ -178,7 +181,9 @@ bufferline.setup{
         mode = "buffers",
         style_preset = bufferline.style_preset.default,
         themeable = true,
-        numbers = "both",
+        numbers = function(opts)
+            return string.format('%s|%s', opts.id, opts.raise(opts.ordinal))
+        end,
         indicator = {
             icon = "▎",
             style = 'icon',
@@ -207,6 +212,10 @@ bufferline.setup{
                     highlight = "Pmenu"
                 },
             }
-        }
+        },
     }
 }
+
+-- copilot setup --
+-- vim.g.copilot_no_tab_map = true
+-- vim.api.nvim_set_keymap('i', '<TAB>', 'copilot#Accept("<CR>")', { silent = true, expr = true })
