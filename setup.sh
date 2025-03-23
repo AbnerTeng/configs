@@ -15,6 +15,7 @@ DOTFILES_SOURCE="$HOME/git/configs/dotfiles"
 
 install_neovim() {
     echo "Installing neovim..."
+
     if [ ! -d "$NVIM_SOURCE" ]; then
         echo "Error: Neovim source directory not found at $NVIM_SOURCE"
         return 1
@@ -37,6 +38,7 @@ install_neovim() {
 
 config_tmux() {
     echo "Configuring tmux..."
+
     if [ -f "$DOTFILES_SOURCE/.tmux.conf" ]; then
         cp "$DOTFILES_SOURCE/.tmux.conf" "$HOME/"
     else
@@ -47,9 +49,10 @@ config_tmux() {
 
 install_fzf() {
     echo "Installing fzf..."
+
     if [! -d "$HOME/.fzf" ]; then
         git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
-        "$HOME/.fzf/install" --all --no_update-rc
+        "$HOME/.fzf/install" --all
         eval "$(fzf --bash)"
     else
         echo "Warning: fzf already installed at $HOME/.fzf"
@@ -67,21 +70,11 @@ install_fzf() {
 install_ruff_uv() {
     echo "Installing ruff and uv..."
 
-    if ! command -v uv &> /dev/null; then
-        curl -LsSf https://astral.sh/uv/install.sh | sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
-        if ! grep -q "uv generate-shell-completion" "$HOME/.bashrc"; then
-            echo 'eval "$(uv generate-shell-completion bash)"' >> "$HOME/.bashrc"
-        fi
-    else
-        echo "UV already installed, skipping..."
-    fi
-
-    if ! command -v ruff &> /dev/null; then
-        curl -LsSf https://astral.sh/ruff/install.sh | sh
-    else
-        echo "Ruff already installed, skipping..."
-    fi
+    echo 'eval "$(uv generate-shell-completion bash)"' >> "$HOME/.bashrc"
+   
+    curl -LsSf https://astral.sh/ruff/install.sh | sh
 }
 
 main() {
