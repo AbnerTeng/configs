@@ -75,13 +75,30 @@ install_ruff_uv() {
     echo 'eval "$(uv generate-shell-completion bash)"' >> "$HOME/.bashrc"
    
     curl -LsSf https://astral.sh/ruff/install.sh | sh
+
+    echo "export PATH='$HOME/.local/bin:$PATH'" >> "$HOME/.bashrc"
 }
+
+install_nvitop() {
+    echo "Installing nvitop..."
+
+    pip install nvitop
+}
+
+install_yq() {
+    echo "Installing yq..."
+
+    pip install yq
+}
+
 
 main() {
     install_neovim
     config_tmux
     install_fzf
     install_ruff_uv
+    install_nvitop
+    install_yq
 
     echo "Setup complete! Please log out and log back in to apply all changes."
 }
