@@ -25,7 +25,7 @@ download_and_install_neovim() {
   else
     wget https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-linux-x86_64.tar.gz
     tar xzvf nvim-linux-x86_64.tar.gz
-    mv nvim-linux64 nv
+    mv nvim-linux-x86_64 nv
   fi
 
   echo "Download complete."
