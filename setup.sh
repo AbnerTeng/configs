@@ -11,7 +11,6 @@ exec > >(tee -a "$LOGFILE") 2>&1
 
 DOTFILES_SOURCE="$HOME/git/configs/dotfiles"
 
-# Install dependencies
 
 download_and_install_neovim() {
   echo "Downloading neovim..."
@@ -74,30 +73,33 @@ install_fzf() {
   if [ ! -d "$HOME"/git-fuzzy ]; then
     git clone https://github.com/bigH/git-fuzzy.git "$HOME"/git-fuzzy
     echo 'export PATH="$HOME/git-fuzzy/bin:$PATH"' >> "$HOME"/.bashrc
+
   else
     echo "Warning: git-fuzzy already installed at $HOME/git-fuzzy"
   fi
 }
 
 install_ruff_uv() {
-  echo "Installing ruff and uv..."
-
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-
-  echo 'eval "$(uv generate-shell-completion bash)"' >>"$HOME"/.bashrc
-
-  curl -LsSf https://astral.sh/ruff/install.sh | sh
-
-  echo "export PATH='$HOME/.local/bin:$PATH'" >>"$HOME"/.bashrc
-  source "$HOME"/.bashrc
+  if [ ! -d "$HOME/.local/bin/uv" ]; then
+    echo "Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    echo 'eval "$(uv generate-shell-completion bash)"' >>"$HOME"/.bashrc
+  elif [ ! -d "$HOME/.local/bin/ruff" ]; then
+    echo "Installing ruff..."
+    curl -LsSf https://astral.sh/ruff/install.sh | sh
+  fi
+  if ! grep -q 'export PATH=.*.local/bin' "$HOME"/.bashrc; then
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME"/.bashrc
+    source "$HOME"/.bashrc
+  fi
 }
 
 install_nvtop() {
   if [ "$sys_os" == "x86_64" ]; then
     cd ~
-    wget https://github.com/Syllo/nvtop/releases/donwload/latest/nvtop-x86_64.AppImage
-    chmod +x u+x nvtop-x86_64.AppImage
-    echo 'alias nvtop="$HOME/nvtop-x86_64.AppImage"' >> "$HOME"/.bashrc
+    wget https://github.com/Syllo/nvtop/releases/download/3.2.0/nvtop-3.2.0-x86_64.AppImage
+    chmod u+x nvtop-3.2.0-x86_64.AppImage
+    echo "alias nvtop='$HOME/nvtop-3.2.0-x86_64.AppImage'" >> "$HOME"/.bashrc
     source "$HOME"/.bashrc
   else
     echo "nvtop is not supported on arm64 architecture."
@@ -108,9 +110,9 @@ install_yq() {
   echo "Installing yq..."
 
   if [ "$sys_os" == "arm64" ]; then
-    wget https://github.com/mikefarah/yq/releases/download/latest/yq_darwin_arm64 -O "$HOME"/.local/bin/yq
+    wget https://github.com/mikefarah/yq/releases/download/v4.46.1/yq_darwin_arm64 -O "$HOME"/.local/bin/yq
   else
-    wget https://github.com/mikefarah/yq/releases/download/latest/yq_linux_amd64 -O "$HOME"/.local/bin/yq
+    wget https://github.com/mikefarah/yq/releases/download/v4.46.1/yq_linux_amd64 -O "$HOME"/.local/bin/yq
   fi
 
   echo "Donwloading yq complete."
@@ -130,7 +132,7 @@ main() {
   config_tmux
   install_fzf
   install_ruff_uv
-  install_nvtop
+  # install_nvtop
   install_yq
 
   echo "Setup complete! Please log out and log back in to apply all changes."

@@ -8,7 +8,7 @@ if [ "$sys_os" != "x86_64" ] && [ "$sys_os" != "arm64" ]; then
 elif [ "$sys_os" == "arm64" ]; then
   echo "Installing homebrew for arm64 architecture..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  brew install wget curl git python
+  brew install wget curl git python bc
 
   if python --version >/dev/null 2>&1; then
     echo "Python is installed successfully."
