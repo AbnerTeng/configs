@@ -33,12 +33,7 @@ download_and_install_neovim() {
   echo 'export PATH="$HOME/nv/bin:$PATH"' >> "$HOME"/.bashrc
   source "$HOME/.bashrc"
 
-  if nvim --version >/dev/null 2>&1; then
-    echo "Neovim is already installed."
-  else
-    echo "Neovim installation failed. Please check the logs."
-    exit 1
-  fi
+  nvim --version
 
   echo "Installing LazyVim..."
 
@@ -127,12 +122,7 @@ install_yq() {
     source "$HOME"/.bashrc
   fi
 
-  if yq --version >/dev/null 2>&1; then
-    echo "yq is installed successfully."
-  else
-    echo "yq installation failed. Please check the logs."
-    exit 1
-  fi
+  yq --version
 }
 
 main() {
