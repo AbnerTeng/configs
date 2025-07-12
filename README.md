@@ -1,18 +1,32 @@
 # configs
 
-My configs for ubuntu server initial setup
+My configs for LinuxOS (ubuntu) / MacOS initial setup
 
 # Usage
+
+1.
 
 ```bash
 git clone https://github.com/AbnerTeng/configs.git
 
 cd configs
+```
 
+2. Pre-check for must-have tools
+
+```bash
+chmod +x pre-check.sh
+```
+
+3. Setup the dev environment
+
+```bash
 chmod +x setup.sh
 ./setup.sh
 ```
 
 # Notice
 
-I suggest to clone this repo into `$HOME/git`, so If you clone to another directory, please slightly modify the `NVIM_SOURCE` and `DOTFILES_SOURCE` inside `setup.sh`
+1. The neovim config is based on my personal preference, so there might be smth need API key (GitHub copilot, wakatime, etc.). Remove it if you don't need it.
+2. `nvtop` is not well-prepared, figuring out...
+3. We now only support `bash`, if you want to use `zsh`, just modify the `setup.sh` file.
