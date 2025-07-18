@@ -6,7 +6,7 @@ set -e
 # --- Configuration and Setup ---
 
 # Determine the script's absolute directory to locate other files.
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 DOTFILES_SOURCE="$SCRIPT_DIR/dotfiles"
 LOGFILE="$HOME/setup_log.txt"
 
@@ -18,8 +18,8 @@ echo "Dotfiles source directory: $DOTFILES_SOURCE"
 
 # --- System Detection ---
 
-OS=$(uname -s)      # Linux, Darwin (macOS)
-ARCH=$(uname -m)    # x86_64, arm64
+OS=$(uname -s)   # Linux, Darwin (macOS)
+ARCH=$(uname -m) # x86_64, arm64
 SHELL_NAME=$(basename "$SHELL")
 RC_FILE="$HOME/.${SHELL_NAME}rc"
 
@@ -38,7 +38,7 @@ add_to_rc() {
     echo "Adding '$line' to $RC_FILE"
     echo -e "
 # Added by setup.sh
-$line" >> "$RC_FILE"
+$line" >>"$RC_FILE"
   else
     echo "Line already exists in $RC_FILE: '$line'"
   fi
@@ -69,13 +69,13 @@ download_and_install_neovim() {
 
   echo "Downloading Neovim from $nvim_url..."
   wget "$nvim_url"
-  
+
   echo "Extracting $nvim_archive..."
   if [ "$OS" = "Darwin" ]; then
-      xattr -c "./$nvim_archive" # Remove quarantine attribute on macOS
+    xattr -c "./$nvim_archive" # Remove quarantine attribute on macOS
   fi
   tar xzvf "$nvim_archive"
-  
+
   # Clean up old installation and move new one
   rm -rf ./nv
   mv "./$nvim_dir" ./nv
@@ -88,8 +88,8 @@ download_and_install_neovim() {
 
   echo "Installing LazyVim starter configuration..."
   if [ -d "$HOME/.config/nvim" ]; then
-      echo "Found existing nvim config, creating a backup at $HOME/.config/nvim.bak"
-      mv "$HOME/.config/nvim" "$HOME/.config/nvim.bak"
+    echo "Found existing nvim config, creating a backup at $HOME/.config/nvim.bak"
+    mv "$HOME/.config/nvim" "$HOME/.config/nvim.bak"
   fi
   mkdir -p "$HOME/.config"
   git clone https://github.com/LazyVim/starter "$HOME/.config/nvim" && rm -rf "$HOME/.config/nvim/.git"
@@ -108,6 +108,7 @@ config_tmux() {
   if [ -f "$DOTFILES_SOURCE/.tmux.conf" ]; then
     cp "$DOTFILES_SOURCE/.tmux.conf" "$HOME/"
     echo "Copied .tmux.conf to $HOME"
+    tmux set -g prefix C-a
   else
     echo "Warning: Tmux config not found at $DOTFILES_SOURCE/.tmux.conf"
   fi
@@ -140,7 +141,7 @@ install_ruff_uv() {
   mkdir -p "$HOME/.local/bin"
   add_to_rc 'export PATH="$HOME/.local/bin:$PATH"'
 
-  if ! command -v uv &> /dev/null; then
+  if ! command -v uv &>/dev/null; then
     echo "Installing uv..."
     curl -LsSf https://astral.sh/uv/install.sh | sh
     add_to_rc 'source <(uv generate-shell-completion zsh)'
@@ -149,7 +150,7 @@ install_ruff_uv() {
     echo "uv is already installed."
   fi
 
-  if ! command -v ruff &> /dev/null; then
+  if ! command -v ruff &>/dev/null; then
     echo "Installing ruff..."
     "$HOME/.local/bin/uv" pip install ruff
   else
@@ -158,20 +159,20 @@ install_ruff_uv() {
 }
 
 install_nvtop() {
-    echo "Installing nvtop..."
-    if [ "$OS" = "Linux" ] && [ "$ARCH" = "x86_64" ]; then
-        cd "$HOME"
-        local nvtop_url="https://github.com/Syllo/nvtop/releases/download/3.2.0/nvtop-3.2.0-x86_64.AppImage"
-        local nvtop_appimage="nvtop-3.2.0-x86_64.AppImage"
-        
-        wget -O "$nvtop_appimage" "$nvtop_url"
-        chmod u+x "$nvtop_appimage"
-        
-        add_to_rc "alias nvtop=''''$HOME/$nvtop_appimage''''"
-        echo "nvtop installed."
-    else
-        echo "Skipping nvtop: Not supported on $OS-$ARCH."
-    fi
+  echo "Installing nvtop..."
+  if [ "$OS" = "Linux" ] && [ "$ARCH" = "x86_64" ]; then
+    cd "$HOME"
+    local nvtop_url="https://github.com/Syllo/nvtop/releases/download/3.2.0/nvtop-3.2.0-x86_64.AppImage"
+    local nvtop_appimage="nvtop-3.2.0-x86_64.AppImage"
+
+    wget -O "$nvtop_appimage" "$nvtop_url"
+    chmod u+x "$nvtop_appimage"
+
+    add_to_rc "alias nvtop=''''$HOME/$nvtop_appimage''''"
+    echo "nvtop installed."
+  else
+    echo "Skipping nvtop: Not supported on $OS-$ARCH."
+  fi
 }
 
 install_yq() {
@@ -192,7 +193,7 @@ install_yq() {
   echo "Downloading yq from $yq_url..."
   wget -O "$yq_path" "$yq_url"
   chmod +x "$yq_path"
-  
+
   add_to_rc 'export PATH="$HOME/.local/bin:$PATH"'
   echo "yq installation complete."
   "$yq_path" --version
@@ -216,3 +217,4 @@ main() {
 }
 
 main
+
