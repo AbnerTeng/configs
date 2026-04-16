@@ -108,7 +108,6 @@ config_tmux() {
   if [ -f "$DOTFILES_SOURCE/.tmux.conf" ]; then
     cp "$DOTFILES_SOURCE/.tmux.conf" "$HOME/"
     echo "Copied .tmux.conf to $HOME"
-    tmux set -g prefix C-a
   else
     echo "Warning: Tmux config not found at $DOTFILES_SOURCE/.tmux.conf"
   fi
@@ -120,8 +119,9 @@ install_fzf() {
     git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
 
     "$HOME/.fzf/install" --bin
-    add_to_rc '[ -f ~/.fzf.bash ] && source ~/.fzf.bash'
-    add_to_rc '[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh'
+    add_to_rc 'export PATH="$HOME/.fzf/bin:$PATH"'
+    add_to_rc "[ -f ~/.fzf.${SHELL_NAME} ] && source ~/.fzf.${SHELL_NAME}"
+    add_to_rc "command -v fzf &>/dev/null && eval \"\$(fzf --${SHELL_NAME})\""
   else
     echo "fzf is already installed at $HOME/.fzf"
   fi
@@ -144,15 +144,14 @@ install_ruff_uv() {
   if ! command -v uv &>/dev/null; then
     echo "Installing uv..."
     curl -LsSf https://astral.sh/uv/install.sh | sh
-    add_to_rc 'source <(uv generate-shell-completion zsh)'
-    add_to_rc 'source <(uv generate-shell-completion bash)'
+    add_to_rc "source <(uv generate-shell-completion ${SHELL_NAME})"
   else
     echo "uv is already installed."
   fi
 
   if ! command -v ruff &>/dev/null; then
     echo "Installing ruff..."
-    "$HOME/.local/bin/uv" pip install ruff
+    "$HOME/.local/bin/uv" tool install ruff
   else
     echo "ruff is already installed."
   fi
@@ -168,7 +167,7 @@ install_nvtop() {
     wget -O "$nvtop_appimage" "$nvtop_url"
     chmod u+x "$nvtop_appimage"
 
-    add_to_rc "alias nvtop=''''$HOME/$nvtop_appimage''''"
+    add_to_rc "alias nvtop='$HOME/$nvtop_appimage'"
     echo "nvtop installed."
   else
     echo "Skipping nvtop: Not supported on $OS-$ARCH."
