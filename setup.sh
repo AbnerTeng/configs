@@ -202,8 +202,8 @@ install_yq() {
 
 main() {
   bash "$SCRIPT_DIR/pre-check.sh"
-  download_and_install_neovim
-  config_tmux
+  # download_and_install_neovim
+  # config_tmux
   install_fzf
   install_ruff_uv
   # install_nvtop # Commented out as in original
@@ -216,4 +216,3 @@ main() {
 }
 
 main
-
